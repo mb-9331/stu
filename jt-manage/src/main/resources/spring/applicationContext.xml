@@ -1,0 +1,80 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop" 
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd 
+	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.0.xsd">
+
+	<!--1.配置包扫描  -->
+	<context:component-scan base-package="com.jt"/>
+	
+	<!--2.配置数据源  -->
+	
+	<!--2.1导入pro配置文件  -->
+	<!-- <context:property-placeholder location="classpath:/property/*.properties"/> -->
+	<!-- private Resource[] locations; -->
+	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath:/property/jdbc.properties</value>
+				<value>classpath:/property/redis.properties</value>
+			</list>
+		</property>
+	</bean>
+	
+	<!--2.2配置数据源  -->
+	<bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource">
+        <property name="driverClassName" value="${jdbc.driver}" />
+        <property name="url" value="${jdbc.url}" />
+        <property name="username" value="${jdbc.username}" />
+        <property name="password" value="${jdbc.password}" />
+	</bean>
+	
+	
+	<!--3.配置事务控制  -->
+	<tx:annotation-driven/>
+	
+	<!--3.1 定义事务管理器  -->
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
+	
+	<!--3.2 定义事务策略
+		
+		propagation="REQUIRED" 执行该操作 必须添加事务
+		propagation="SUPPORTS" 事务支持的,原来的操作有事务,则添加事务,
+							        原有的操作没有事务,则不添加事务
+							        
+		propagation="NEVER"    从不添加事务	
+		propagation="REQUIRES_NEW"   都会创建一个新的事务	
+		read-only="true"       该操作只读		        
+	  -->
+	<tx:advice id="txAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<tx:method name="save*"   propagation="REQUIRED"/>
+			<tx:method name="delete*" propagation="REQUIRED"/>
+			<tx:method name="update*" propagation="REQUIRED"/>
+			<tx:method name="find*"   propagation="SUPPORTS" read-only="true"/>
+			<tx:method name="*"       propagation="SUPPORTS" read-only="true"/>
+		</tx:attributes>
+	</tx:advice>
+	
+	<!--3.3 定义事务切面  
+		(pointcut*, advisor*, aspect*)
+		
+		expression 切入点表达式
+		within(包名.类名)  按类匹配  控制粒度 粗粒度
+		execution(返回值类型 包名.类名.方法名(参数列表))
+	-->
+	<aop:config>
+		<aop:pointcut expression="execution(* com.jt.manage.service..*.*(..))" id="pc"/>
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="pc"/>
+	</aop:config>
+	
+</beans>

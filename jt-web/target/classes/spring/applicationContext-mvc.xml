@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/mvc 
+        http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+        http://www.springframework.org/schema/context 
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/aop 
+        http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+	<!--1.开启mvc注解  -->
+	<mvc:annotation-driven/>
+	
+	<!--2.放行静态资源文件  -->
+	<mvc:default-servlet-handler/>
+	
+	<!--3.配置视图解析器  内部资源视图解析器 
+		作用:为返回页面拼接前缀和后缀      /WEB-INF    .jsp  
+	-->
+	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/WEB-INF/views/"/>
+		<property name="suffix" value=".jsp"/>
+	</bean>
+	
+	<!--4.添加文件上传视图解析器  -->
+	<bean id="multipartResolver"  class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<!--上传量10M  -->
+		<property name="maxUploadSize" value="10485760"/>
+		<property name="defaultEncoding" value="utf-8"/>
+	</bean>
+	<mvc:interceptors>
+		<mvc:interceptor>
+			<mvc:mapping path="/cart/**"/>
+			<mvc:mapping path="/order/**"/>
+			<bean class="com.jt.web.intercept.UserInterceptor"/>
+		</mvc:interceptor>
+	</mvc:interceptors>
+</beans>

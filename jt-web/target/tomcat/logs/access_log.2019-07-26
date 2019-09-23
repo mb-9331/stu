@@ -1,0 +1,9 @@
+0:0:0:0:0:0:0:1 - - [26/Jul/2019:00:00:45 +0800] "GET /items/562379.html HTTP/1.0" 200 43652 http-bio-8092-exec-3 140
+127.0.0.1 - - [26/Jul/2019:00:00:46 +0800] "POST /cart/add/562379.html HTTP/1.0" 302 - http-bio-8092-exec-5 37
+0:0:0:0:0:0:0:1 - - [26/Jul/2019:00:00:46 +0800] "GET /cart/show.html HTTP/1.0" 200 18397 http-bio-8092-exec-10 14
+127.0.0.1 - - [26/Jul/2019:00:01:20 +0800] "GET /items/562379.html HTTP/1.0" 200 43652 http-bio-8092-exec-6 29
+0:0:0:0:0:0:0:1 - - [26/Jul/2019:00:01:22 +0800] "POST /cart/add/562379.html HTTP/1.0" 302 - http-bio-8092-exec-7 23
+127.0.0.1 - - [26/Jul/2019:00:01:22 +0800] "GET /cart/show.html HTTP/1.0" 200 18397 http-bio-8092-exec-4 8
+0:0:0:0:0:0:0:1 - - [26/Jul/2019:00:01:24 +0800] "GET /items/562379.html HTTP/1.0" 200 43652 http-bio-8092-exec-9 109
+127.0.0.1 - - [26/Jul/2019:00:01:25 +0800] "POST /cart/add/562379.html HTTP/1.0" 302 - http-bio-8092-exec-8 33
+0:0:0:0:0:0:0:1 - - [26/Jul/2019:00:01:25 +0800] "GET /cart/show.html HTTP/1.0" 200 18399 http-bio-8092-exec-2 20
